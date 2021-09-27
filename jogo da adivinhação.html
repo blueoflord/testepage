@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>jogo da adivinhação</title>
+</head>
+<body>
+   
+   <style>
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Lekton', cursive;
+      font-size: 20px;
+    }
+    
+    h1 {
+      font-family: 'Rancho', cursive;
+      font-size: 3.5rem;
+      font-weight: 400;
+    }
+    
+    .main {
+      min-height: 100vh;
+    
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+    }
+    
+    .game {
+      box-shadow: 10px 5px 15px black;
+    }
+    
+    .game, form{
+      background-color: #FFFccc;
+      padding: 1.8rem;
+    
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+    
+    .game > div {
+      padding: 0.5rem;
+    }
+    
+    .form input,
+    .form label,
+    .form button {
+      margin-top: 1rem;
+    }
+    
+    .form input,
+    .form button {
+      font-size: inherit;
+      font-family: inherit;
+      padding: 0.5rem;
+    }
+    
+    .form button {
+      cursor: pointer;
+    }
+    
+    .form button:hover {
+      filter: opacity(0.8);
+    }
+    </style>
+   
+
+   <main class="main">
+    <section class="game">
+      <h1>Jogo de Adivinha</h1>
+      <div class="status" id="status"> Adivinhe o número sorteado </div>
+      <div class="tentativa" id="tentativa">Tentativa: 0</div>
+      <form class="form" id="form">
+        <label for="chute">Chute um número entre 0 e 100</label>
+        <input type="number" name="chute" id="chute" />
+        <button id="btnVerifica">Verificar</button>
+      </form>
+    </section>
+  </main>
+</body>
+</html>
+
+   <script>const jogoAdivinha = {
+    semente: 100,
+    tentativa : 0,
+    numeroSorteado : function geraValorAleatorio() {
+      return Math.round(Math.random() * this.semente);
+    }
+  }
+  
+  const btnVerifica = document.getElementById('btnVerifica');
+  const status = document.getElementById('status');
+  const tentativa = document.getElementById('tentativa');
+  const chute = document.getElementById('chute');
+  
+  let numeroSorteado = jogoAdivinha.numeroSorteado();
+  
+  function atualizarTentativa(tentativa, valor) {
+    if (valor > 1) {
+      tentativa.innerHTML = 'Tentativas : <span style="color: blue">' +
+        valor + '</span>';
+    } else {
+      tentativa.innerHTML = 'Tentativa : <span style="color: blue">' +
+        valor + '</span>';
+    }
+  }
+  
+  function reiniciar() {
+    btnVerifica.innerText = 'Verificar';
+    tentativa.innerHTML = 'Tentativa :  0';
+    chute.disabled = false;
+    chute.value = '';
+    jogoAdivinha.tentativa = 0
+    numeroSorteado = jogoAdivinha.numeroSorteado();
+    btnVerifica.removeEventListener('click', reiniciar);
+  }
+  
+  const formAdivinha = document.getElementById('form');
+  
+  formAdivinha.addEventListener('submit', function(event) {
+    event.preventDefault();
+  
+    if (!!chute.value == false) {
+      status.innerHTML =  '<span style="color:#FF3D00">Digite algum valor</span>';
+      return;
+    }
+  
+    atualizarTentativa(tentativa, ++jogoAdivinha.tentativa);
+  
+    if (numeroSorteado == chute.value) {
+      status.innerHTML = '<span style="color:#00C853">Parabéns, Parabens você adivinhou!</span>';
+      chute.disabled = true
+      btnVerifica.innerText = "aperte para jogar denovo";
+      btnVerifica.addEventListener('click', reiniciar);
+  
+    } else if (numeroSorteado > chute.value) {
+      status.innerText =  'tente um numero maior
+      ';
+    } else if (numeroSorteado < chute.value) {
+      status.innerText =  'tente um numero menor';
+    }+
+
+  });
+  </script>
+  
